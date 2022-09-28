@@ -4,17 +4,15 @@ import morgan from "morgan";
 import mysqlConnect from "./database/connectdb.js";
 import authRouter from "./routes/auth.route.js"
 
-
 const app = express();
 dotenv.config();
 
-
-app.use("/", authRouter)
-
 // Middlewares
-app.use(express());
+app.use(express.json())
 app.use(morgan("dev"));
 
+// Rutas
+app.use("/", authRouter)
 
 // Puerto conectado
 const PORT = process.env.PORT || 5000;
