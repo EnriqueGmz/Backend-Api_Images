@@ -1,4 +1,10 @@
 export const register = (req, res) => {
     console.log(req.body)
-    res.send({ ok: "register" })
+    res.json({ ok: "register" })
 }
+
+export const login = (req, res) => {
+    console.log(req.body)
+    res.json({ ok: "Login" })
+}
+
