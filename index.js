@@ -7,6 +7,8 @@ import authRouter from "./routes/auth.route.js"
 const app = express();
 dotenv.config();
 
+
+
 app.use("/", authRouter)
 
 // Middlewares
