@@ -1,5 +1,6 @@
 import express from "express";
 import * as dotenv from "dotenv";
+import mysqlConnect from "./database/connectdb.js";
 
 const app = express();
 dotenv.config();
