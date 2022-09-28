@@ -1,12 +1,12 @@
 import express from "express";
 import * as dotenv from "dotenv";
-import mysqlConnect from "./database/connectdb.js";
 import morgan from "morgan";
+import mysqlConnect from "./database/connectdb.js";
 import authRouter from "./routes/auth.route.js"
+
 
 const app = express();
 dotenv.config();
-
 
 
 app.use("/", authRouter)
