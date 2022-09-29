@@ -47,7 +47,12 @@ export const login = (req, res) => {
             if (rows.length > 0) {
                 const validPassword = await bcrypt.compare(password, rows[0].password)
                 if (validPassword) {
-                    res.json({ ok: "exito" })
+                    const { token, expiresIn } = generateToken(rows[0].idusers);
+                    res.status(201).json({
+                        ok: "exito",
+                        token,
+                        expiresIn
+                    })
                 } else {
                     res.status(400).json({
                         ok: "ko",
