@@ -12,7 +12,7 @@ app.use(express.json())
 app.use(morgan("dev"));
 
 // Rutas
-app.use("/api/v1", authRouter)
+app.use("/api/v1/auth", authRouter)
 
 // Puerto conectado
 const PORT = process.env.PORT || 5000;
