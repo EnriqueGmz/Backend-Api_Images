@@ -1,12 +1,14 @@
 import mysqlConnect from "../database/connectdb.js";
-import { comparePassword, encryptPassword } from "../libs/bcrypt.js";
+import { encryptPassword } from "../libs/bcrypt.js";
+import bcrypt from "bcryptjs";
+import { generateToken } from "../helpers/tokenManager.js";
 
 export const register = async (req, res) => {
     const { username, surname, email, password } = req.body
     console.log(req.body);
 
     try {
-        let query = `select email from apiimagenes.users where email = ?`;
+        let query = `SELECT email from apiimagenes.users where email = ?`;
         mysqlConnect.query(query, [email], async (err, rows, field) => {
             if (err) throw err;
 
@@ -14,7 +16,7 @@ export const register = async (req, res) => {
 
                 const hashPassword = await encryptPassword(password);
 
-                query = `insert into apiimagenes.users (username, surname, email, password) values (?, ?, ?, ?)`;
+                query = `INSERT INTO apiimagenes.users (username, surname, email, password) values (?, ?, ?, ?)`;
                 mysqlConnect.query(query, [username, surname, email, hashPassword], async (err, rows, fields) => {
                     if (err) throw err;
 
@@ -34,7 +36,34 @@ export const register = async (req, res) => {
 }
 
 export const login = (req, res) => {
+    const { email, password } = req.body;
     console.log(req.body)
-    res.json({ ok: "Login" })
+
+    try {
+        let query = `SELECT  * from apiimagenes.users where email = ?`;
+        mysqlConnect.query(query, [email], async (err, rows, field) => {
+            if (err) throw err;
+
+            if (rows.length > 0) {
+                const validPassword = await bcrypt.compare(password, rows[0].password)
+                if (validPassword) {
+                    res.json({ ok: "exito" })
+                } else {
+                    res.status(400).json({
+                        ok: "ko",
+                        msg: "Credenciales invalidas"
+                    })
+                }
+            } else {
+                res.status(400).json({ msg: "No existe el usuario" });
+            }
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ ok: "ko" })
+    }
+
+
+
 }
 

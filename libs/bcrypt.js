@@ -11,7 +11,3 @@ export const encryptPassword = async (password) => {
         throw new Error("Falló el hash del password")
     }
 }
-
-export const comparePassword = async (password, savedPassword) => {
-    await bcrypt.compare(password, savedPassword);
-}
