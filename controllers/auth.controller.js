@@ -19,8 +19,7 @@ export const register = async (req, res) => {
                 query = `INSERT INTO apiimagenes.users (username, surname, email, password) values (?, ?, ?, ?)`;
                 mysqlConnect.query(query, [username, surname, email, hashPassword], async (err, rows, fields) => {
                     if (err) throw err;
-
-                    await res.status(201).json({ ok: 'exito' })
+                    res.status(201).json({ ok: 'exito' })
                 })
             } else {
                 res.status(400).json({
@@ -31,7 +30,7 @@ export const register = async (req, res) => {
         })
     } catch (error) {
         console.log(error);
-        res.status(500).json({ ok: "ko" })
+        return res.status(500).json({ ok: "ko" })
     }
 }
 
@@ -47,6 +46,7 @@ export const login = (req, res) => {
             if (rows.length > 0) {
                 const validPassword = await bcrypt.compare(password, rows[0].password)
                 if (validPassword) {
+                    // Generando JWT
                     const { token, expiresIn } = generateToken(rows[0].idusers);
                     res.status(201).json({
                         ok: "exito",
@@ -60,15 +60,27 @@ export const login = (req, res) => {
                     })
                 }
             } else {
-                res.status(400).json({ msg: "No existe el usuario" });
+                res.status(403).json({ msg: "No existe el usuario" });
             }
         })
     } catch (error) {
         console.log(error);
-        res.status(500).json({ ok: "ko" })
+        return res.status(500).json({ ok: "ko" })
     }
-
-
-
 }
+
+export const infoUsers = (req, res) => {
+    try {
+        let query = `SELECT * from apiimagenes.users where idusers = ?`;
+        mysqlConnect.query(query, [req.uid], async (err, rows, field) => {
+            if (err) throw err;
+
+            res.status(200).json(rows[0])
+        })
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({ ok: "ko" });
+    }
+}
+
 
