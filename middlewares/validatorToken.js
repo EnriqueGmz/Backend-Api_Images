@@ -3,7 +3,7 @@ import { tokenVerificationErrors } from "../helpers/tokenManager.js";
 
 export const requireToken = (req, res, next) => {
     try {
-        const token = req.header('Authorization');
+        const token = req.header("Authorization");
         if (!token)
             return res.status(401).json({
                 error: "No existe el token de autorización"
@@ -11,6 +11,7 @@ export const requireToken = (req, res, next) => {
 
         const { uid } = jwt.verify(token, process.env.jwtSign)
         req.uid = uid;
+
         next()
     } catch (error) {
         console.log(error.message)

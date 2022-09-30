@@ -75,7 +75,12 @@ export const infoUsers = (req, res) => {
         mysqlConnect.query(query, [req.uid], async (err, rows, field) => {
             if (err) throw err;
 
-            res.status(200).json(rows[0])
+            res.status(200).json({
+                id: rows[0].idusers,
+                name: rows[0].username,
+                surname: rows[0].surname,
+                email: rows[0].email
+            })
         })
     } catch (error) {
         console.log(error.message);
