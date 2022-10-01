@@ -89,7 +89,7 @@ export const infoUsers = (req, res) => {
     }
 }
 
-export const refreshToken = (req, res) => {
+export const refresh = (req, res) => {
     try {
         const { token, expiresIn } = generateToken(req.uid);
 

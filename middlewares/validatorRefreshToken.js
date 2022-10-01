@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { tokenVerificationErrors } from "../helpers/tokenManager.js";
 
 export const requireRefreshToken = (req, res, next) => {
     try {
@@ -14,6 +15,7 @@ export const requireRefreshToken = (req, res, next) => {
         console.log(error);
         return res.status(401).json({
             ok: "ko",
+            error: tokenVerificationErrors[error.message]
         });
     }
 }
