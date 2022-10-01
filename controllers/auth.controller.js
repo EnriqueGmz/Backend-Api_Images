@@ -1,7 +1,7 @@
 import mysqlConnect from "../database/connectdb.js";
 import { encryptPassword } from "../libs/bcrypt.js";
 import bcrypt from "bcryptjs";
-import { generateToken } from "../helpers/tokenManager.js";
+import { generateRefreshToken, generateToken } from "../helpers/tokenManager.js";
 
 export const register = async (req, res) => {
     const { username, surname, email, password } = req.body
@@ -48,6 +48,7 @@ export const login = (req, res) => {
                 if (validPassword) {
                     // Generando JWT
                     const { token, expiresIn } = generateToken(rows[0].idusers);
+                    generateRefreshToken(rows[0].idusers, res);
                     res.status(201).json({
                         ok: "exito",
                         token,
@@ -63,6 +64,17 @@ export const login = (req, res) => {
                 res.status(403).json({ msg: "No existe el usuario" });
             }
         })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ ok: "ko" })
+    }
+}
+
+export const refreshToken = (req, res) => {
+    try {
+        const { token, expiresIn } = generateToken(rows[0].idusers);
+
+        return re.json({ token, expiresIn })
     } catch (error) {
         console.log(error);
         return res.status(500).json({ ok: "ko" })

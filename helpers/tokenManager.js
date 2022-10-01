@@ -6,6 +6,7 @@ export const generateToken = (uid) => {
     try {
         const token = jwt.sign(payload, process.env.jwtSign, { expiresIn });
         return { token, expiresIn };
+
     } catch (error) {
         console.log(error);
     }
@@ -16,13 +17,13 @@ export const generateRefreshToken = (uid, res) => {
     const payload = { uid };
 
     try {
-        const token = jwt.sign(payload, process.env.jwtRefresh, { expiresIn });
+        const refreshToken = jwt.sign(payload, process.env.jwtRefresh, { expiresIn });
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
-            secure: !process.env.MODO === "developer",
-            expires: new Date(Date.now() + expiresIn * 1000)
-        })
+            secure: !(process.env.MODO === "developer"),
+            expires: new Date(Date.now() + expiresIn * 1000),
+        });
     } catch (error) {
         console.log(error)
     }
