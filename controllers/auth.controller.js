@@ -70,17 +70,6 @@ export const login = (req, res) => {
     }
 }
 
-export const refreshToken = (req, res) => {
-    try {
-        const { token, expiresIn } = generateToken(rows[0].idusers);
-
-        return re.json({ token, expiresIn })
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({ ok: "ko" })
-    }
-}
-
 export const infoUsers = (req, res) => {
     try {
         let query = `SELECT * from apiimagenes.users where idusers = ?`;
@@ -97,6 +86,17 @@ export const infoUsers = (req, res) => {
     } catch (error) {
         console.log(error.message);
         return res.status(500).json({ ok: "ko" });
+    }
+}
+
+export const refreshToken = (req, res) => {
+    try {
+        const { token, expiresIn } = generateToken(req.uid);
+
+        return res.json({ token, expiresIn })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ ok: "ko" })
     }
 }
 

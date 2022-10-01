@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 export const generateToken = (uid) => {
-    const expiresIn = 60 * 15;
+    const expiresIn = 30;
     const payload = { uid };
     try {
         const token = jwt.sign(payload, process.env.jwtSign, { expiresIn });
