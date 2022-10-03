@@ -17,7 +17,7 @@ app.use(cookieParser());
 app.use("/api/v1/auth", authRouter)
 
 // Esta carpeta para esta aplciacion sera usado para almacenar las imagenes
-app.use("/uploads", express.static(path.resolve()))
+app.use("/uploads", express.static(path.resolve("uploads")))
 
 // Puerto conectado
 const PORT = process.env.PORT || 5000;
