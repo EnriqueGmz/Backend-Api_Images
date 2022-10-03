@@ -2,6 +2,7 @@ import express from "express";
 import * as dotenv from "dotenv";
 import morgan from "morgan";
 import authRouter from "./routes/auth.route.js";
+import imageRouter from "./routes/images.route.js"
 import cookieParser from "cookie-parser";
 import path from "path"
 
@@ -15,6 +16,7 @@ app.use(cookieParser());
 
 // Rutas
 app.use("/api/v1/auth", authRouter)
+app.use("/api/v1/images", imageRouter)
 
 // Esta carpeta para esta aplciacion sera usado para almacenar las imagenes
 app.use("/uploads", express.static(path.resolve("uploads")))
