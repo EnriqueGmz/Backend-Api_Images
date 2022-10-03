@@ -11,6 +11,12 @@ const storage = multer.diskStorage({
     }
 })
 
-export default multer({ storage });
+export const uploadFile = multer({
+    storage: storage,
+    fileFilter: function (req, file, cb) {
+        const ext = path.extname(file.originalname);
+        cb(null, (ext == ".png" || ext == ".jpg" || ext == ".gif" || ext == ".jepg"));
+    }
+});
 
 

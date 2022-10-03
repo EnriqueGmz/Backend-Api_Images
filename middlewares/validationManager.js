@@ -1,4 +1,4 @@
-import { body, validationResult } from "express-validator";
+import { body, checkSchema, validationResult } from "express-validator";
 
 export const validationResultExpress = (req, res, next) => {
     const errors = validationResult(req);
@@ -6,7 +6,7 @@ export const validationResultExpress = (req, res, next) => {
         return res.status(400).json({ errors: errors.array() });
     }
     next();
-}
+};
 
 export const bodyRegisterValidation = [
     body("email", "Formato de email incorrecto")
@@ -25,7 +25,7 @@ export const bodyRegisterValidation = [
             }
         ),
     validationResultExpress
-]
+];
 
 export const bodyLoginValidation = [
     body("email", "Formato de email incorrecto")
@@ -35,5 +35,19 @@ export const bodyLoginValidation = [
     body("password", "Minimo 6 caracteres")
         .trim()
         .isLength({ min: 6 }),
+    validationResultExpress
+];
+
+export const bodyImageValidator = [
+    body("title", "El título de la imagen es obligatorio").not().isEmpty(),
+    body("descriptionImage", "La descripción de la iamgen es obligatoria").not().isEmpty(),
+    checkSchema({
+        "image": {
+            custom: {
+                options: (value, { req, path }) => !!req.file['path'],
+                errorMessage: 'La imagen no es valida'
+            }
+        },
+    }),
     validationResultExpress
 ]
