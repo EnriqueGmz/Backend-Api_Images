@@ -1,11 +1,10 @@
-import express from "express";
 import mysqlConnect from "../database/connectdb.js";
 
-export const getImages = (req, res) => {
+export const getImages = async (req, res) => {
+    const fkuser = req.uid;
     try {
-
-        let query = `SELECT * FROM apiimagenes.images where fkuser = ?`;
-        mysqlConnect.query(query, [req.uid], async (err, rows, field) => {
+        const query = `SELECT * FROM apiimagenes.images where fkuser = ?`;
+        mysqlConnect.query(query, [fkuser], async (err, rows, field) => {
             if (err) throw err;
             res.status(200).json(rows);
         })
@@ -13,8 +12,23 @@ export const getImages = (req, res) => {
         console.log(error)
         return res.status(500).json({ ok: "ko" })
     }
-}
+};
 
+export const getImage = async (req, res) => {
+
+    try {
+        const { idimages } = req.params;
+        let query = `SELECT *  from apiimagenes.images where idimages= ?`;
+        mysqlConnect.query(query, [idimages], async (err, rows, field) => {
+            if (err) throw err;
+            res.status(200).json(rows)
+            console.log(rows)
+        })
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({ ok: "ko" });
+    }
+};
 
 export const createImage = async (req, res) => {
     const { title, descriptionImage } = req.body;
@@ -22,11 +36,11 @@ export const createImage = async (req, res) => {
     console.log(req.file.filename)
 
     try {
-        let image = req.file.filename;
-        let query = `INSERT INTO apiimagenes.images (title, descriptionImage, image, fkuser) values (?, ?, ?, ?)`;
+        const image = req.file.filename;
+        const query = `INSERT INTO apiimagenes.images (title, descriptionImage, image, fkuser) values (?, ?, ?, ?)`;
         mysqlConnect.query(query, [title, descriptionImage, image, fkuser], async (err, rows, field) => {
             if (err) throw err;
-            res.status(201).json({ ok: "Exito" })
+            res.status(201).json({ ok: "Exito", })
         })
     } catch (error) {
         console.log(error)

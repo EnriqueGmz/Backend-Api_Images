@@ -19,7 +19,7 @@ export const register = async (req, res) => {
                 query = `INSERT INTO apiimagenes.users (username, surname, email, password) values (?, ?, ?, ?)`;
                 mysqlConnect.query(query, [username, surname, email, hashPassword], async (err, rows, fields) => {
                     if (err) throw err;
-                    await res.status(201).json({ ok: 'exito' })
+                    res.status(201).json({ ok: 'exito' })
                 })
             } else {
                 res.status(400).json({
@@ -68,11 +68,11 @@ export const login = (req, res) => {
         console.log(error);
         return res.status(500).json({ ok: "ko" })
     }
-}
+};
 
-export const infoUsers = (req, res) => {
+export const infoUser = (req, res) => {
     try {
-        let query = `SELECT * FROM apiimagenes.users where idusers = ?`;
+        let query = `SELECT * from apiimagenes.users where idusers = ?`;
         mysqlConnect.query(query, [req.uid], async (err, rows, field) => {
             if (err) throw err;
 
@@ -87,7 +87,7 @@ export const infoUsers = (req, res) => {
         console.log(error.message);
         return res.status(500).json({ ok: "ko" });
     }
-}
+};
 
 export const refresh = (req, res) => {
     try {
@@ -98,6 +98,6 @@ export const refresh = (req, res) => {
         console.log(error);
         return res.status(500).json({ ok: "ko" })
     }
-}
+};
 
 
