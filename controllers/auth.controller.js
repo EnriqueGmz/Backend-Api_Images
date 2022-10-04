@@ -19,7 +19,7 @@ export const register = async (req, res) => {
                 query = `INSERT INTO apiimagenes.users (username, surname, email, password) values (?, ?, ?, ?)`;
                 mysqlConnect.query(query, [username, surname, email, hashPassword], async (err, rows, fields) => {
                     if (err) throw err;
-                    res.status(201).json({ ok: 'exito' })
+                    await res.status(201).json({ ok: 'exito' })
                 })
             } else {
                 res.status(400).json({
@@ -72,7 +72,7 @@ export const login = (req, res) => {
 
 export const infoUsers = (req, res) => {
     try {
-        let query = `SELECT * from apiimagenes.users where idusers = ?`;
+        let query = `SELECT * FROM apiimagenes.users where idusers = ?`;
         mysqlConnect.query(query, [req.uid], async (err, rows, field) => {
             if (err) throw err;
 
