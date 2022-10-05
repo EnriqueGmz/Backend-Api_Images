@@ -23,12 +23,12 @@ export const getImage = async (req, res) => {
         let query = `SELECT * FROM apiimagenes.images where idimages = ?`;
         mysqlConnect.query(query, [idimages], async (err, rows, field) => {
             if (err) throw err;
-            console.log(rows[0])
+            console.log(rows[0]);
             if (rows[0] == undefined) {
-                res.json({
+                res.status(404).json({
                     ok: "ko",
-                    msg: "No existe este id"
-                })
+                    msg: "No existe esta imagen"
+                });
             } else {
                 if (rows[0].fkuser != fkuser) {
                     return res.status(200).json({
@@ -37,7 +37,7 @@ export const getImage = async (req, res) => {
                     });
                 };
                 return res.status(200).json(rows[0]);
-            }
+            };
         });
     } catch (error) {
         console.log(error.message);
@@ -63,4 +63,34 @@ export const createImage = async (req, res) => {
     };
 };
 
+export const deleteImg = async (req, res) => {
+    const { idimages } = req.params;
+    const fkuser = req.uid;
+    try {
+        const query = `DELETE FROM apiimagenes.images where idimages = ?`;
+        mysqlConnect.query(query, [idimages], (err, rows, fields) => {
+            if (err) throw err;
+            if (rows[0] == undefined) {
+                return res.status(404).json({
+                    ok: "ko",
+                    msg: "No existe esta imagen"
+                });
+            } else {
+                if (rows[0].fkuser != fkuser) {
+                    return res.status(401).json({
+                        ok: "ko",
+                        msg: "no te pertenece este id"
+                    });
+                }
+                return res.status(200).json({
+                    msg: "Imagen borrada",
+                    imagen: rows[0]
+                })
+            };
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ ok: "ko" });
+    }
+}
 
