@@ -75,13 +75,14 @@ export const infoUser = (req, res) => {
         let query = `SELECT * from apiimagenes.users where idusers = ?`;
         mysqlConnect.query(query, [req.uid], async (err, rows, field) => {
             if (err) throw err;
-
+            console.log(req.params)
             res.status(200).json({
                 id: rows[0].idusers,
                 name: rows[0].username,
                 surname: rows[0].surname,
                 email: rows[0].email
             })
+            console.log(rows[0])
         })
     } catch (error) {
         console.log(error.message);
