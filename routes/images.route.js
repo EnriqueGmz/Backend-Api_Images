@@ -8,7 +8,7 @@ import uploadFile from "../libs/multer.js";
 const router = express.Router();
 
 router.get("/", requireToken, getImages);
-router.get("/:idimages", requireToken, getImage)
+router.get("/:idimages", requireToken, getImage);
 router.post("/", requireToken, uploadFile.single("image"), bodyImageValidator, createImage);
 
 export default router;
