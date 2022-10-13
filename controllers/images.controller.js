@@ -67,30 +67,36 @@ export const deleteImg = async (req, res) => {
     const { idimages } = req.params;
     const fkuser = req.uid;
     try {
-        const query = `DELETE FROM apiimagenes.images where idimages = ?`;
-        mysqlConnect.query(query, [idimages], (err, rows, fields) => {
+
+        let query = `SELECT * FROM apiimagenes.images WHERE idimages =?`;
+        mysqlConnect.query(query, [idimages], async (err, rows, fields) => {
             if (err) throw err;
-            if (rows[0] == undefined) {
+            if (rows[0] === undefined) {
                 return res.status(404).json({
                     ok: "ko",
                     msg: "No existe esta imagen"
                 });
             } else {
-                if (rows[0].fkuser != fkuser) {
-                    return res.status(401).json({
+                if (rows[0] != fkuser) {
+                    return res.status(404).json({
                         ok: "ko",
-                        msg: "no te pertenece este id"
+                        msg: "No te pertenece este id"
                     });
-                }
+                };
+            };
+
+            query = `DELETE FROM apiimagenes.images where idimages = ?`;
+            mysqlConnect.query(query, [idimages], (err, rows, fields) => {
+                if (err) throw err;
+
                 return res.status(200).json({
                     msg: "Imagen borrada",
-                    imagen: rows[0]
-                })
-            };
+                });
+            });
         });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ ok: "ko" });
-    }
+    };
 }
 
