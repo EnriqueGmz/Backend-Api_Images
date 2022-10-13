@@ -54,6 +54,7 @@ export const createImage = async (req, res) => {
 
     try {
         const image = req.file.filename;
+        console.log(req.body)
         const query = `INSERT INTO apiimagenes.images (title, descriptionImage, image, fkuser) values (?, ?, ?, ?)`;
         mysqlConnect.query(query, [title, descriptionImage, image, fkuser], async (err, rows, field) => {
             if (err) throw err;
@@ -69,7 +70,6 @@ export const deleteImg = async (req, res) => {
     const { idimages } = req.params;
     const fkuser = req.uid;
     try {
-
         let query = `SELECT * FROM apiimagenes.images WHERE idimages =?`;
         mysqlConnect.query(query, [idimages], async (err, rows, fields) => {
             if (err) throw err;
@@ -93,8 +93,8 @@ export const deleteImg = async (req, res) => {
                 console.log("Imagen borrada del servidor");
             }).catch((err) => console.error("No existe esta imagen en el servidor"))
 
-            query = `DELETE FROM apiimagenes.images where idimages = ?`;
-            mysqlConnect.query(query, [idimages], (err, rows, fields) => {
+            query = `DELETE FROM apiimagenes.images WHERE idimages = ?`;
+            mysqlConnect.query(query, [idimages], async (err, rows, fields) => {
                 if (err) throw err;
 
                 return res.status(200).json({
@@ -106,5 +106,45 @@ export const deleteImg = async (req, res) => {
         console.log(error);
         return res.status(500).json({ ok: "ko" });
     };
-}
+};
+
+export const updateImg = async (req, res) => {
+    const { idimages } = req.params;
+    const { title, descriptionImage } = req.body;
+    const fkuser = req.uid;
+
+    try {
+        let query = "SELECT * FROM apiimagenes.images WHERE idimages = ?";
+        mysqlConnect.query(query, [idimages], async (err, rows, fields) => {
+            if (err) throw err;
+
+            if (rows[0] === undefined) {
+                return res.status(404).json({
+                    ok: "ko",
+                    msg: "No existe esta imagen"
+                });
+            } else {
+                if (rows[0].fkuser != fkuser) {
+                    return res.status(404).json({
+                        ok: "ko",
+                        msg: "No te pertenece este id"
+                    });
+                };
+            };
+
+            query = `UPDATE apiimagenes.images SET title = ?, descriptionImage = ? WHERE idimages = ?`;
+            mysqlConnect.query(query, [title, descriptionImage, idimages], (err, rows, fields) => {
+                if (err) throw err;
+                console.log(rows)
+                return res.status(200).json({
+                    ok: "Exito",
+                });
+            });
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ ok: "ko" });
+    };
+};
+
 
