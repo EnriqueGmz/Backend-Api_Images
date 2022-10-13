@@ -1,4 +1,6 @@
 import mysqlConnect from "../database/connectdb.js";
+import path from "path";
+import * as fs from "fs/promises";
 
 export const getImages = async (req, res) => {
     const fkuser = req.uid;
@@ -77,13 +79,19 @@ export const deleteImg = async (req, res) => {
                     msg: "No existe esta imagen"
                 });
             } else {
-                if (rows[0] != fkuser) {
+                if (rows[0].fkuser != fkuser) {
                     return res.status(404).json({
                         ok: "ko",
                         msg: "No te pertenece este id"
                     });
                 };
             };
+
+            const { image } = rows[0];
+            console.log(path.resolve(`./uploads/${image}`));
+            fs.unlink(path.resolve("./uploads/" + image)).then(() => {
+                console.log("Imagen borrada del servidor");
+            }).catch((err) => console.error("No existe esta imagen en el servidor"))
 
             query = `DELETE FROM apiimagenes.images where idimages = ?`;
             mysqlConnect.query(query, [idimages], (err, rows, fields) => {
