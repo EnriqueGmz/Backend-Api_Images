@@ -5,6 +5,7 @@ import authRouter from "./routes/auth.route.js";
 import imageRouter from "./routes/images.route.js"
 import cookieParser from "cookie-parser";
 import path from "path"
+import cors from "cors"
 
 const app = express();
 dotenv.config();
@@ -12,6 +13,10 @@ dotenv.config();
 // Middlewares
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(cors({
+    origin: ['http://localhost:3000', 'http://localhost:8080', 'http://localhost:4200'],
+    credentials: true
+}));
 app.use(cookieParser());
 
 // Rutas

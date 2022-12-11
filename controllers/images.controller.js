@@ -4,10 +4,9 @@ import * as fs from "fs/promises";
 
 export const getImages = async (req, res) => {
     const fkuser = req.uid;
-    const { idimages } = req.params;
     try {
         const query = `SELECT * FROM apiimagenes.images where fkuser = ?`;
-        mysqlConnect.query(query, [idimages], async (err, rows, field) => {
+        mysqlConnect.query(query, [fkuser], async (err, rows, field) => {
             if (err) throw err;
             console.log(rows)
             res.status(200).json(rows);
@@ -50,10 +49,10 @@ export const getImage = async (req, res) => {
 export const createImage = async (req, res) => {
     const { title, descriptionImage } = req.body;
     const fkuser = req.uid;
-    console.log(req.file.filename);
+    console.log(req.file?.path);
 
     try {
-        const image = req.file.filename;
+        const image = req.file?.path;
         console.log(req.body)
         const query = `INSERT INTO apiimagenes.images (title, descriptionImage, image, fkuser) values (?, ?, ?, ?)`;
         mysqlConnect.query(query, [title, descriptionImage, image, fkuser], async (err, rows, field) => {
