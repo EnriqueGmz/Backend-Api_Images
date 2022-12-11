@@ -9,6 +9,6 @@ const router = express.Router();
 router.post("/register", bodyRegisterValidation, register);
 router.post("/login", bodyLoginValidation, login);
 router.get("/protected", requireToken, infoUser);
-router.post("/refresh", requireRefreshToken, refresh)
+router.get("/refresh", requireRefreshToken, refresh)
 
 export default router;
