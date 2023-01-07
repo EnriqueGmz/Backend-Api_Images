@@ -103,7 +103,7 @@ export const refresh = (req, res) => {
 
 export const logOut = (req, res) => {
     res.clearCookie("refreshToken");
-    res.status(200).json({ ok: true });
+    res.status(200).json({ ok: "Exito" });
 }
 
 

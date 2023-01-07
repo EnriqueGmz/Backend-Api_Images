@@ -53,7 +53,7 @@ export const createImage = async (req, res) => {
 
     try {
         const image = req.file?.path;
-        console.log(req.body)
+        // console.log(req.body)
         const query = `INSERT INTO apiimagenes.images (title, descriptionImage, image, fkuser) values (?, ?, ?, ?)`;
         mysqlConnect.query(query, [title, descriptionImage, image, fkuser], async (err, rows, field) => {
             if (err) throw err;
@@ -87,8 +87,8 @@ export const deleteImg = async (req, res) => {
             };
 
             const { image } = rows[0];
-            console.log(path.resolve(`./uploads/${image}`));
-            fs.unlink(path.resolve("./uploads/" + image)).then(() => {
+            console.log(path.resolve(`./${image}`));
+            fs.unlink(path.resolve("./" + image)).then(() => {
                 console.log("Imagen borrada del servidor");
             }).catch((err) => console.error("No existe esta imagen en el servidor"))
 
